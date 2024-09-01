@@ -11,9 +11,11 @@ install.packages("pheatmap")
 install.packages("ggplot2")
 install.packages("ggrepel")
 install.packages("stringr")
+if (!require("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+BiocManager::install("DESeq2,DEGreport,tximport")
 ```
 Librerias a utilizar en el procesamiento 
-```
 library(DESeq2)
 library(tidyverse)
 library(RColorBrewer)
@@ -520,3 +522,202 @@ barplot(rev(-log10(GO_enrich@result$p.adjust[1:10])),     # -log10 de los p-valu
         col="#dbc557")                                 # Color de las barras
 dev.off()
 
+
+
+# Ajustar márgenes y aumentar el tamaño de la imagen
+jpeg(filename = "QCplots/barplotgo.jpg", width = 20, height = 8, units = "in", res = 300)
+
+# Ajustar los márgenes para evitar que las etiquetas se corten
+par(mar = c(5, 50, 4, 2) + 0.1, cex.lab = 1.5)  # Márgenes: abajo, izquierda, arriba, derecha
+
+# Crear el barplot
+barplot(rev(-log10(GO_enrich@result$p.adjust[1:10])),    # -log10 de los p-values ajustados
+        horiz = TRUE,                                    # Barras horizontales
+        names=rev(GO_enrich@result$Description[1:10]),   # Descripción de los términos GO
+        las=2,                                           # Rotar las etiquetas de los ejes
+        xlab="-log10(adj.p-value)",                      # Etiqueta del eje x
+        cex.names = 2,
+        cex.axis = 1.5,                                  # Tamaño de las etiquetas
+        col="#dbc557")                                   # Color de las barras
+# Añadir una línea vertical en el -log10(0.05) como referencia
+abline(v=-log10(0.05))
+dev.off()
+
+# Dotplot on enrichResult and gseaResult objects:
+jpeg(filename = "QCplots/goenrich.jpg", width = 6, height = 4, units = "in", res = 300)
+enrichplot::dotplot(GO_enrich, orderBy="p.adjust")
+dev.off()
+BiocManager::install("EnhancedVolcano", force = TRUE)
+library(EnhancedVolcano)
+  
+  LFC1$symbol <- tx2gene$symbol[match(row.names(LFC1), tx2gene$ensgene)]
+  LFC2$symbol <- tx2gene$symbol[match(row.names(LFC2), tx2gene$ensgene)]
+  LFC3$symbol <- tx2gene$symbol[match(row.names(LFC3), tx2gene$ensgene)]
+  vol_lab1 <- EnhancedVolcano(LFC1,
+                             lab = LFC1$symbol,
+                             labSize = 4,
+                             x= 'log2FoldChange',
+                             y = 'padj',
+                             ylab = bquote(~-Log [10] ~ italic(padj)),
+                             pCutoff = 0.05,
+                             xlim = c(-7,7),
+                             ylim = c(0,5),
+                             FCcutoff = 2,
+                             title = paste0("Volcano plot"),
+                             legendLabels=c('Genes no DE y cambio \nen la expresión menor a 2',
+                                            'Genes no DE y cambio \nen la expresión mayor a 2',
+                                            'Genes son DE y cambio \nen la expresión menor a 2',
+                                            'Genes son DE y cambio \nen la expresión mayor a 2'),
+                             legendPosition = 'right')
+  vol_lab1
+  ggsave(filename = paste0("Volcanoplots/Volcanoplot_gene_name-1",".png"), plot=vol_lab1, width = 14, height=7)      
+  vol_lab2 <- EnhancedVolcano(LFC2,
+                              lab = LFC2$symbol,
+                              labSize = 4,
+                              x= 'log2FoldChange',
+                              y = 'padj',
+                              ylab = bquote(~-Log [10] ~ italic(padj)),
+                              pCutoff = 0.05,
+                              xlim = c(-5,10),
+                              ylim = c(0,6),
+                              FCcutoff = 2,
+                              title = paste0("Volcano plot"),
+                              legendLabels=c('Genes no DE y cambio \nen la expresión menor a 2',
+                                             'Genes no DE y cambio \nen la expresión mayor a 2',
+                                             'Genes son DE y cambio \nen la expresión menor a 2',
+                                             'Genes son DE y cambio \nen la expresión mayor a 2'),
+                              legendPosition = 'right')
+  vol_lab2
+  ggsave(filename = paste0("Volcanoplots/Volcanoplot_gene_name-2",".png"), plot=vol_lab2, width = 14, height=7)  
+  vol_lab3 <- EnhancedVolcano(LFC3,
+                              lab = LFC3$symbol,
+                              labSize = 4,
+                              x= 'log2FoldChange',
+                              y = 'padj',
+                              ylab = bquote(~-Log [10] ~ italic(padj)),
+                              pCutoff = 0.05,
+                             # xlim = c(-10,10),
+                              ylim = c(0,10),
+                              FCcutoff = 2,
+                              title = paste0("Volcano plot"),
+                              legendLabels=c('Genes no DE y cambio \nen la expresión menor a 2',
+                                             'Genes no DE y cambio \nen la expresión mayor a 2',
+                                             'Genes son DE y cambio \nen la expresión menor a 2',
+                                             'Genes son DE y cambio \nen la expresión mayor a 2'),
+                              legendPosition = 'right')
+vol_lab3
+ggsave(filename = paste0("Volcanoplots/Volcanoplot_gene_name-3",".png"), plot=vol_lab3, width = 14, height=7)  
+  
+tmp = plotCounts(ddsTxi, gene = grep('ENSG00000163735', names(ddsTxi), value = TRUE), intgroup = "growth", pch = 18, main = '??? expression', returnData = TRUE)
+theme <- theme(panel.background = element_blank(), panel.border = element_rect(fill = NA),
+               plot.title = element_text(hjust = 0.5))
+p <- ggplot(tmp, aes(x = growth, y = count)) + geom_boxplot() + 
+geom_dotplot(binaxis = 'y', stackdir = 'center', dotsize = 0.6) + ggtitle('ENSG00000163735/ CXCL5 expression') +theme
+print(p)
+
+tmp1 = plotCounts(ddsTxi, gene = grep('ENSG00000230678', names(ddsTxi), value = TRUE), intgroup = "growth", pch = 18, main = '??? expression', returnData = TRUE)
+theme <- theme(panel.background = element_blank(), panel.border = element_rect(fill = NA),
+               plot.title = element_text(hjust = 0.5))
+p1 <- ggplot(tmp1, aes(x = growth, y = count)) + geom_boxplot() + 
+  geom_dotplot(binaxis = 'y', stackdir = 'center', dotsize = 0.6) + ggtitle('ENSG00000230678/ BRD2 expression') +theme
+print(p1)
+
+
+tmp2 = plotCounts(ddsTxi, gene = grep('ENSG00000102038', names(ddsTxi), value = TRUE), intgroup = "growth", pch = 18, main = '??? expression', returnData = TRUE)
+theme <- theme(panel.background = element_blank(), panel.border = element_rect(fill = NA),
+               plot.title = element_text(hjust = 0.5))
+p2 <- ggplot(tmp2, aes(x = growth, y = count)) + geom_boxplot() + 
+  geom_dotplot(binaxis = 'y', stackdir = 'center', dotsize = 0.6) + ggtitle('ENSG00000102038/ SMARCA1 expression') +theme
+print(p2)
+
+
+
+
+# Instalar y cargar el paquete VennDiagram
+install.packages("VennDiagram")
+library(VennDiagram)
+
+# Definir los conjuntos de datos
+cultivo_tardio <- c("SLC7A2", "ABCB1", "CPVL", "AREG", "EREG", "FGF13", "GDF15", "THEMIS2", 
+                    "AKAP12", "CDK7", "ALDH1L2", "SECTM1", "FHAD1", "CRABP2", "CREB5", "FSIP1", 
+                    "PRDM8", "ADGRF1", "PLA2G4D", "CEL", "REG3A", "TNFRSF10C", "GJC1", "SLC44A4", 
+                    "CSNK2B", "HLA-C", "MUC5AC", "EIF4BP7", "EIF3FP3", "HLA-B", "CFB", "MTND4P12", 
+                    "PCDHGB6", "TRIL", "ALOX5", "AC256203.1", "CBWD4P", "CSNK2B", "ABHD16A")
+
+cultivo_temprano <- c("SLC7A9", "EML1", "FBLN1", "ABCB1", "CERS4", "PALM", "GLRA2", "ZDHHC15", 
+                      "CPVL", "B3GAT1", "SOX6", "LIN7A", "PROC", "XPNPEP2", "MAGEA10", "EREG", 
+                      "SIX1", "HOXD10", "HOXD11", "GAMT", "SERPINF1", "ECHDC3", "ALDH1L2", "IGF2BP3", 
+                      "NACAD", "CFAP300", "PLA2G12B", "CPLX2", "CREB5", "KIRREL3", "VENTX", "PDLIM3", 
+                      "SAMD8", "SV2A", "AQP5", "ALOX15", "SLC1A7", "FREM1", "JSRP1", "FILIP1L", 
+                      "APLN", "TCEA2", "ZNF556", "EGFL7", "CNTNAP2", "CD19", "PLAG1", "ZNF716", 
+                      "DENND5A", "AC107956.1", "STMN3", "TPM2", "TGM2", "ONECUT3", "HLA-C", "LDHAP4", 
+                      "RCN1P2", "COL28A1", "RPL13P12", "EIF4BP7", "MTND2P28", "AC098826.2", "BRD2", 
+                      "EIF3FP3", "RPL10P9", "LDHAP7", "LDHAP3", "RPS4XP22", "MTND6P4", "ZKSCAN7", 
+                      "MTRNR2L6", "FBXO17", "TAPBP", "OPRD1", "NOTCH1", "ADAMTS15")
+
+neoplasma <- c("ZIC2", "ABCB11", "CACNG4", "FER1L4", "UPK3A", "WNT5B", "EREG", "CKMT2", "ECHDC3", 
+               "TESPA1", "WDR17", "AKAP6", "AKR1C2", "CFAP221", "CXCL5", "CLDN2", "ARL4D", "EID2B", 
+               "TSHZ2", "GJC1", "TMEM119", "PCDH9", "LSAMP", "HEATR4", "HLA-DQA1", "STMN3", "DUSP27", 
+               "CES1", "RNA5SP199", "CR1", "CFB", "C2", "SLC44A4", "CSNK2B", "BAG6", "LDHAP4", 
+               "EIF4BP7", "MTND2P28", "AC016734.1", "EIF3FP3", "LDHAP7", "LDHAP3", "RPP21", 
+               "MTND4P12", "AC105052.3", "ZNF660", "RORA", "HLA-A")
+
+# Crear el diagrama de Venn
+venn.plot <- venn.diagram(
+  x = list(
+    "Cultivo tardío" = cultivo_tardio,
+    "Cultivo temprano" = cultivo_temprano,
+    "Neoplasma" = neoplasma
+  ),
+  filename = "diagrama_venn.png",
+  col = "transparent",
+  fill = c("#E41A1C", "#377EB8", "#4DAF4A"),
+  alpha = 0.5,
+  cex = 2,
+  cat.cex = 2,
+  cat.col = c("#E41A1C", "#377EB8", "#4DAF4A")
+)
+
+# Guardar el archivo de imagen
+jpeg("diagrama_venn.jpg")
+grid.draw(venn.plot)
+dev.off()
+# Instalar y cargar el paquete ggvenn
+install.packages("ggvenn")
+library(ggvenn)
+
+# Definir los conjuntos de datos
+cultivo_tardio <- c("SLC7A2", "ABCB1", "CPVL", "AREG", "EREG", "FGF13", "GDF15", "THEMIS2", 
+                    "AKAP12", "CDK7", "ALDH1L2", "SECTM1", "FHAD1", "CRABP2", "CREB5", "FSIP1", 
+                    "PRDM8", "ADGRF1", "PLA2G4D", "CEL", "REG3A", "TNFRSF10C", "GJC1", "SLC44A4", 
+                    "CSNK2B", "HLA-C", "MUC5AC", "EIF4BP7", "EIF3FP3", "HLA-B", "CFB", "MTND4P12", 
+                    "PCDHGB6", "TRIL", "ALOX5", "AC256203.1", "CBWD4P", "CSNK2B", "ABHD16A")
+
+cultivo_temprano <- c("SLC7A9", "EML1", "FBLN1", "ABCB1", "CERS4", "PALM", "GLRA2", "ZDHHC15", 
+                      "CPVL", "B3GAT1", "SOX6", "LIN7A", "PROC", "XPNPEP2", "MAGEA10", "EREG", 
+                      "SIX1", "HOXD10", "HOXD11", "GAMT", "SERPINF1", "ECHDC3", "ALDH1L2", "IGF2BP3", 
+                      "NACAD", "CFAP300", "PLA2G12B", "CPLX2", "CREB5", "KIRREL3", "VENTX", "PDLIM3", 
+                      "SAMD8", "SV2A", "AQP5", "ALOX15", "SLC1A7", "FREM1", "JSRP1", "FILIP1L", 
+                      "APLN", "TCEA2", "ZNF556", "EGFL7", "CNTNAP2", "CD19", "PLAG1", "ZNF716", 
+                      "DENND5A", "AC107956.1", "STMN3", "TPM2", "TGM2", "ONECUT3", "HLA-C", "LDHAP4", 
+                      "RCN1P2", "COL28A1", "RPL13P12", "EIF4BP7", "MTND2P28", "AC098826.2", "BRD2", 
+                      "EIF3FP3", "RPL10P9", "LDHAP7", "LDHAP3", "RPS4XP22", "MTND6P4", "ZKSCAN7", 
+                      "MTRNR2L6", "FBXO17", "TAPBP", "OPRD1", "NOTCH1", "ADAMTS15")
+
+neoplasma <- c("ZIC2", "ABCB11", "CACNG4", "FER1L4", "UPK3A", "WNT5B", "EREG", "CKMT2", "ECHDC3", 
+               "TESPA1", "WDR17", "AKAP6", "AKR1C2", "CFAP221", "CXCL5", "CLDN2", "ARL4D", "EID2B", 
+               "TSHZ2", "GJC1", "TMEM119", "PCDH9", "LSAMP", "HEATR4", "HLA-DQA1", "STMN3", "DUSP27", 
+               "CES1", "RNA5SP199", "CR1", "CFB", "C2", "SLC44A4", "CSNK2B", "BAG6", "LDHAP4", 
+               "EIF4BP7", "MTND2P28", "AC016734.1", "EIF3FP3", "LDHAP7", "LDHAP3", "RPP21", 
+               "MTND4P12", "AC105052.3", "ZNF660", "RORA", "HLA-A")
+
+# Crear un diagrama de Venn con ggvenn
+venn_data <- list("Cultivo tardío de organoide vs Tejido normal" = cultivo_tardio, 
+                  "Cultivo temprano de organoide vs Tejido normal" = cultivo_temprano, 
+                  "Neoplasma vs Tejido normal" = neoplasma)
+
+# Crear el diagrama y ajustar las etiquetas
+ggvenn(venn_data, show_elements = TRUE, fill_color = c("#E41A1C", "#377EB8", "#4DAF4A"), text_size = 3, stroke_size = 1)
+
+# Guardar la imagen
+ggsave("diagrama_venn_con_genes.png", width = 10, height = 10, units = "in", dpi = 300)
