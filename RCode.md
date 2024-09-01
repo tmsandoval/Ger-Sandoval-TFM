@@ -70,16 +70,22 @@ Se importa los datos de la metadata
 samples <- read.table("C:/Users/Det-Pc/Documents/Maestria UNIR/TFM/RStudio - Results/SraRunTable.csv", header=TRUE, sep=",", quote="")
 ```
 Se verifica que las filas y columnas son del mismo tamaño
+```
 ncol(txi$counts)
 nrow(samples)
-#Se convierte a la columna growth del data frame a objeto tipo factor
+```
+Se convierte a la columna growth del data frame a objeto tipo factor
+```
 samples$growth <- as.factor(samples$growth)
-#Se crea el objeto a clase deseqdatasetfromtximport, para llevar a cabo el analisis de expresion diferencial 
+```
+Se crea el objeto a clase deseqdatasetfromtximport, para llevar a cabo el analisis de expresion diferencial 
+```
 ddsTxi <- DESeqDataSetFromTximport(txi,
                                    colData = samples,
                                    design = ~ growth)
 ddsTxi
-#Se toma como linea base las muestras de normal tissue 
+```
+Se toma como linea base las muestras de normal tissue 
 ddsTxi$growth <- relevel(ddsTxi$growth, ref = "normal tissue")
 #Resumen de las estadisticas descriptivas de la base de datos cuantificados
 summary(counts(ddsTxi))
