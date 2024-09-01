@@ -31,13 +31,14 @@ library(apeglm)
 ```
 Extrae la informacion de las cuantificaciones de cada una de las muestras 
 ```files <- file.path(samples, "quant.sf")
-```files
+```
+files
 Se reemplaza en los nombres de las muestras quitando la terminacion quants
 ```
 names(files) <- str_replace(samples, "./quants/", "") 
 names(files) <- str_replace(names(files), "_quant", "") 
 files
-``
+```
 Se lee el archivo indice de los genes de homo sapiens 
 ```
 tx2gene <- read.delim("tx2gene_grch38_ens94.txt")
@@ -52,19 +53,23 @@ txi <- tximport(files, type="salmon", tx2gene=tx2gene[,c("tx_id", "ensgene")], c
 file.exists(files)
 attributes(txi) #Se muestran los atributos del conjunto creado mediante tximport
 ```
-# Verificar si hay valores NA
+```
+Verificar si hay valores NA
 anyNA(txi$counts)
-# Verificar si hay valores NaN
+Verificar si hay valores NaN
 any(is.nan(txi$counts))
-#Se mira y verifica que no existan na o nan
-txi$counts %>% View()
-#Se guarda los datos y los genes en un objeto tipo data frame
+```
+Se guarda los datos y los genes en un objeto tipo data frame
+```
 data <- txi$counts %>% 
   round(digits = 2) %>%  # Redondear a dos decimales
-  as.data.frame() 
-#Se importa los datos de la metadata
+  as.data.frame()
+```
+Se importa los datos de la metadata
+```
 samples <- read.table("C:/Users/Det-Pc/Documents/Maestria UNIR/TFM/RStudio - Results/SraRunTable.csv", header=TRUE, sep=",", quote="")
-#Se verifica que las filas y columnas son del mismo tamaño
+```
+Se verifica que las filas y columnas son del mismo tamaño
 ncol(txi$counts)
 nrow(samples)
 #Se convierte a la columna growth del data frame a objeto tipo factor
