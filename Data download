@@ -1,4 +1,11 @@
 #Descarga de las lecturas de la base de datos seleccionada
 
+```ruby
+require 'redcarpet'
+markdown = Redcarpet.new("Hello World!")
+puts markdown.to_html
+```
+
+
 Conda create –n tesis
 Conda activate tesis
