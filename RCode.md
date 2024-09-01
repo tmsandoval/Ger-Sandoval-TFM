@@ -717,11 +717,14 @@ venn.plot <- venn.diagram(
 jpeg("diagrama_venn.jpg")
 grid.draw(venn.plot)
 dev.off()
-# Instalar y cargar el paquete ggvenn
+```
+DIagrama de venn con los genes representativos de los grupos analizados
+```
+#Instalar y cargar el paquete ggvenn
 install.packages("ggvenn")
 library(ggvenn)
 
-# Definir los conjuntos de datos
+#Definir los conjuntos de datos
 cultivo_tardio <- c("SLC7A2", "ABCB1", "CPVL", "AREG", "EREG", "FGF13", "GDF15", "THEMIS2", 
                     "AKAP12", "CDK7", "ALDH1L2", "SECTM1", "FHAD1", "CRABP2", "CREB5", "FSIP1", 
                     "PRDM8", "ADGRF1", "PLA2G4D", "CEL", "REG3A", "TNFRSF10C", "GJC1", "SLC44A4", 
@@ -746,13 +749,14 @@ neoplasma <- c("ZIC2", "ABCB11", "CACNG4", "FER1L4", "UPK3A", "WNT5B", "EREG", "
                "EIF4BP7", "MTND2P28", "AC016734.1", "EIF3FP3", "LDHAP7", "LDHAP3", "RPP21", 
                "MTND4P12", "AC105052.3", "ZNF660", "RORA", "HLA-A")
 
-# Crear un diagrama de Venn con ggvenn
+#Crear un diagrama de Venn con ggvenn
 venn_data <- list("Cultivo tardío de organoide vs Tejido normal" = cultivo_tardio, 
                   "Cultivo temprano de organoide vs Tejido normal" = cultivo_temprano, 
                   "Neoplasma vs Tejido normal" = neoplasma)
 
-# Crear el diagrama y ajustar las etiquetas
+#Crear el diagrama y ajustar las etiquetas
 ggvenn(venn_data, show_elements = TRUE, fill_color = c("#E41A1C", "#377EB8", "#4DAF4A"), text_size = 3, stroke_size = 1)
 
-# Guardar la imagen
+#Guardar la imagen
 ggsave("diagrama_venn_con_genes.png", width = 10, height = 10, units = "in", dpi = 300)
+```
