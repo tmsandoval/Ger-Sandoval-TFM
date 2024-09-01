@@ -13,6 +13,7 @@ Se crea un fichero ejecutable. Dado que ejecutaremos el mismo comando en cada mu
 ```
 nano cuantif.sh
 ```
+El contenido del archivo ejecutable es el siguiente:
 ```
 #!/bin/bash
 
@@ -53,6 +54,7 @@ for i in "${seq[@]}";
 done
 
 ```
+Una vez creado el archivo se lo configura como ejecutable y ejecuta en el directorio de trabajo
 
 ```
 
