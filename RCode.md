@@ -558,14 +558,14 @@ barplot(rev(-log10(GO_enrich@result$p.adjust[1:10])),     # -log10 de los p-valu
         col="#dbc557")                                 # Color de las barras
 dev.off()
 ```
-
-# Ajustar márgenes y aumentar el tamaño de la imagen
+```
+#Ajustar márgenes y aumentar el tamaño de la imagen
 jpeg(filename = "QCplots/barplotgo.jpg", width = 20, height = 8, units = "in", res = 300)
 
-# Ajustar los márgenes para evitar que las etiquetas se corten
+#Ajustar los márgenes para evitar que las etiquetas se corten
 par(mar = c(5, 50, 4, 2) + 0.1, cex.lab = 1.5)  # Márgenes: abajo, izquierda, arriba, derecha
 
-# Crear el barplot
+#Crear el barplot
 barplot(rev(-log10(GO_enrich@result$p.adjust[1:10])),    # -log10 de los p-values ajustados
         horiz = TRUE,                                    # Barras horizontales
         names=rev(GO_enrich@result$Description[1:10]),   # Descripción de los términos GO
@@ -574,11 +574,11 @@ barplot(rev(-log10(GO_enrich@result$p.adjust[1:10])),    # -log10 de los p-value
         cex.names = 2,
         cex.axis = 1.5,                                  # Tamaño de las etiquetas
         col="#dbc557")                                   # Color de las barras
-# Añadir una línea vertical en el -log10(0.05) como referencia
+#Añadir una línea vertical en el -log10(0.05) como referencia
 abline(v=-log10(0.05))
 dev.off()
 
-# Dotplot on enrichResult and gseaResult objects:
+#Dotplot on enrichResult and gseaResult objects:
 jpeg(filename = "QCplots/goenrich.jpg", width = 6, height = 4, units = "in", res = 300)
 enrichplot::dotplot(GO_enrich, orderBy="p.adjust")
 dev.off()
@@ -664,15 +664,15 @@ theme <- theme(panel.background = element_blank(), panel.border = element_rect(f
 p2 <- ggplot(tmp2, aes(x = growth, y = count)) + geom_boxplot() + 
   geom_dotplot(binaxis = 'y', stackdir = 'center', dotsize = 0.6) + ggtitle('ENSG00000102038/ SMARCA1 expression') +theme
 print(p2)
+```
 
 
-
-
-# Instalar y cargar el paquete VennDiagram
+```
+#Instalar y cargar el paquete VennDiagram
 install.packages("VennDiagram")
 library(VennDiagram)
 
-# Definir los conjuntos de datos
+#Definir los conjuntos de datos
 cultivo_tardio <- c("SLC7A2", "ABCB1", "CPVL", "AREG", "EREG", "FGF13", "GDF15", "THEMIS2", 
                     "AKAP12", "CDK7", "ALDH1L2", "SECTM1", "FHAD1", "CRABP2", "CREB5", "FSIP1", 
                     "PRDM8", "ADGRF1", "PLA2G4D", "CEL", "REG3A", "TNFRSF10C", "GJC1", "SLC44A4", 
@@ -697,7 +697,7 @@ neoplasma <- c("ZIC2", "ABCB11", "CACNG4", "FER1L4", "UPK3A", "WNT5B", "EREG", "
                "EIF4BP7", "MTND2P28", "AC016734.1", "EIF3FP3", "LDHAP7", "LDHAP3", "RPP21", 
                "MTND4P12", "AC105052.3", "ZNF660", "RORA", "HLA-A")
 
-# Crear el diagrama de Venn
+Crear el diagrama de Venn
 venn.plot <- venn.diagram(
   x = list(
     "Cultivo tardío" = cultivo_tardio,
@@ -712,8 +712,7 @@ venn.plot <- venn.diagram(
   cat.cex = 2,
   cat.col = c("#E41A1C", "#377EB8", "#4DAF4A")
 )
-```
-# Guardar el archivo de imagen
+#Guardar el archivo de imagen
 jpeg("diagrama_venn.jpg")
 grid.draw(venn.plot)
 dev.off()
