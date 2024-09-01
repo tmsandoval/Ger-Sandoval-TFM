@@ -420,7 +420,7 @@ counts_vst_representative2 <- counts_vst[rownames(counts_vst) %in% representativ
 desired_columns3 <- rownames(neoplasmavsnormal)  # Esto toma los nombres de las columnas 
 counts_vst_representative3 <- counts_vst[rownames(counts_vst) %in% representative_genes3, colnames(counts_vst) %in% desired_columns3]
 ```
-
+```
 as.matrix()
 slice(1:1000) %>%
   counts_vst_var <- counts_vst %>%
@@ -450,7 +450,7 @@ p_8 <- pheatmap(counts_vst_representative3,
                 main = "Gene Expression of Representative DEGs",
                 show_rownames = TRUE)
 ggsave(filename = "QCplots/neoplasmavsnormalheat.jpg", plot = p_8, width = 10, height = 10)
-
+```
 KEGG pathways
 ```
 BiocManager::install(c("pathview", "gage", "gageData"))
