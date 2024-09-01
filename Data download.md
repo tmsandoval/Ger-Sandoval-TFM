@@ -1,10 +1,9 @@
-#Descarga de las lecturas de la base de datos seleccionada
+Descarga de las lecturas de la base de datos seleccionada
 ```
-# Create a new conda environment
-conda create -n R34_ChIPseq_v1
-# Activate the environment
-conda activate R34_ChIPseq_v1
+# Crear un nuevo ambiente en Conda
 Conda create –n tesis
+# Activar el nuevo ambiente
+
 Conda activate tesis
 
 ```
