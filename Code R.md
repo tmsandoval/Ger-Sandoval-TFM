@@ -1,16 +1,19 @@
-#Se crea una lista para identificar los quants obtenidos en la cuantificacion realizada mediante salmon
+Se crea una lista para identificar los quants obtenidos en la cuantificacion realizada mediante salmon
 ```
 samples <- list.files(path = "./quants", full.names = T, pattern="ERR") 
 samples
 ```
-#Instalacion de los paquetes necesarios
+Instalacion de los paquetes necesarios
+```
 install.packages("tidyverse")
 install.packages("RColorBrewer")
 install.packages("pheatmap")
 install.packages("ggplot2")
 install.packages("ggrepel")
 install.packages("stringr")
-#Librerias a utilizar en el procesamiento 
+```
+Librerias a utilizar en el procesamiento 
+```
 library(DESeq2)
 library(tidyverse)
 library(RColorBrewer)
