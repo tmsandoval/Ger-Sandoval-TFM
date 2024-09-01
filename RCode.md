@@ -712,7 +712,7 @@ venn.plot <- venn.diagram(
   cat.cex = 2,
   cat.col = c("#E41A1C", "#377EB8", "#4DAF4A")
 )
-
+```
 # Guardar el archivo de imagen
 jpeg("diagrama_venn.jpg")
 grid.draw(venn.plot)
