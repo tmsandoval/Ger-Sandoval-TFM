@@ -86,50 +86,61 @@ ddsTxi <- DESeqDataSetFromTximport(txi,
 ddsTxi
 ```
 Se toma como linea base las muestras de normal tissue 
+```
 ddsTxi$growth <- relevel(ddsTxi$growth, ref = "normal tissue")
-#Resumen de las estadisticas descriptivas de la base de datos cuantificados
+```
+Resumen de las estadisticas descriptivas de la base de datos cuantificados
+``
 summary(counts(ddsTxi))
-#Se aplica el analisis de expresion diferencial
+```
+Se aplica el analisis de expresion diferencial
+```
 ddsTxi <- DESeq(ddsTxi)
 res <- results(ddsTxi)
 res
 resdata <- as.data.frame(res)
 resdatagene <- rownames(resdata)
+```
+Se guarda en un archivo los resultados obtenidos
+```
 write.csv(resdatagene, file = "genes.csv", row.names = FALSE)
+```
+Debido a la reutilizacion de los resultados se los guarda en otras variables. 
+```
 resvolcano <- res
 ddstxi2 <- ddsTxi #Se crea en la copia del data frame de los datos 
-head(samples)
-library(ggplot2)
-# Agrupar los datos por sexo y contar los individuos únicos
+```
+Agrupar los datos por sexo y contar los individuos únicos para generar las graficas que describen la poblacion de estudio
+```
 count_individuals <- samples %>%
   group_by(sex) %>%
   summarise(count = n_distinct(Individual))
-# Definir una paleta de colores
+Definir una paleta de colores
 colores1 <- c("#3d8b7d", "#8fbc91", "#dbc557")
-# Crear el gráfico con ggplot2
+Crear el gráfico con ggplot2
 ggplot(count_individuals, aes(x = sex, y = count, fill = sex)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = count), vjust = -0.5) +
   scale_fill_manual(values = colores1) +
   labs(title = "Número de Individuos por Sexo", x = "Sexo", y = "Número de Individuos") +
   theme_minimal()
-# Agrupar los datos por AGE y contar los individuos únicos
+#Agrupar los datos por AGE y contar los individuos únicos
 count_individuals <- samples %>%
   group_by(AGE) %>%
   summarise(count = n_distinct(Individual)) %>%
   mutate(AGE = as.factor(AGE))  # Convertir AGE a variable categórica
-# Definir una paleta de colores
+#Definir una paleta de colores
 colores1 <- c("#2a9d8f", "#e9c46a", "#f4a261", "#264653", "#f1faee", "#3aafa9", "#72efdd", 
               "#e07a5f", "#2a4d69", "#f1faee", "#c5d0e3")
-# Crear el gráfico con ggplot2
+#Crear el gráfico con ggplot2
 ggplot(count_individuals, aes(x = AGE, y = count, fill = AGE)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = count), vjust = -0.5) +
   scale_fill_manual(values = colores1) +
   labs(title = "Número de Individuos por Edad", x = "Edad", y = "Número de Individuos") +
   theme_minimal()
-# Calcular el conteo y el porcentaje de cada tipo de crecimiento por tipo de muestra
-# Crear el gráfico de barras apiladas horizontal con el número de muestras
+#Calcular el conteo y el porcentaje de cada tipo de crecimiento por tipo de muestra
+#Crear el gráfico de barras apiladas horizontal con el número de muestras
 ggplot(samples, aes(x = sampletype, fill = growth)) +
   geom_bar(position = "stack") +
   geom_text(stat = 'count', aes(label = ..count..), position = position_stack(vjust = 0.5), color = "white") + scale_fill_manual(values = colores1) +
@@ -137,7 +148,8 @@ ggplot(samples, aes(x = sampletype, fill = growth)) +
        y = "Número de Muestras",
        x = "Sitio de Muestreo") +
   theme_minimal()
-#Normalizacion de datos
+```
+Normalizacion de datos
 ddstxi2 <- estimateSizeFactors(ddstxi2)
 #Normalizacion mediante logaritmo regularizado
 dds_rlog <- rlog(ddstxi2)
