@@ -149,8 +149,10 @@ ggplot(samples, aes(x = sampletype, fill = growth)) +
        x = "Sitio de Muestreo") +
   theme_minimal()
 ```
+```
 Normalizacion de datos
 ddstxi2 <- estimateSizeFactors(ddstxi2)
+```
 #Normalizacion mediante logaritmo regularizado
 dds_rlog <- rlog(ddstxi2)
 #Normalizacion mediante transformacion estabilizadora de varianza 
