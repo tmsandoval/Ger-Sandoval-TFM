@@ -258,7 +258,9 @@ p_3
 #Se guarda el grafico en la carpeta creada anteriormente 
 ggsave(filename = "QCplots/sample_heatmap.jpg", plot = p_3, width = 10, height = 8)
 ```
-#Se crea una copia de los datos 
+Se genera dataframes con los resultados mas significtivos
+```
+Se crea una copia de los datos 
 ddstxi3 <- ddstxi2
 resultsNames(ddstxi3)
 #Se toma los valores de normalizacion para generar los histogramas   
@@ -303,13 +305,14 @@ genes3$source <- "lfc3"
 genes4$source <- "lfc1"
 genes5$source <- "lfc2"
 genes6$source <- "lfc3"
-# Combinar los data frames
+#Combinar los data frames
 genessobreexpresados <- rbind(genes1, genes2, genes3)
 genessubreexpresados <- rbind(genes4, genes5, genes6)
-
 write.csv(genessobreexpresados, file = "genessobreexpresados.csv", row.names = FALSE)
 write.csv(genessubreexpresados, file = "genessubreexpresados.csv", row.names = FALSE)
-#Crear y guardar el histograma usando funciones de gráficos base de R
+```
+Crear y guardar el histograma usando funciones de gráficos base de R
+```
 jpeg(filename = "QCplots/latevsnormal.jpg", width = 12, height = 8, units = "in", res = 300)
 hist(LFC1$pvalue, breaks = 50, col = 'grey', 
      main = NULL, 
@@ -416,7 +419,7 @@ desired_columns2 <- rownames(earlyvsnormal)  # Esto toma los nombres de las colu
 counts_vst_representative2 <- counts_vst[rownames(counts_vst) %in% representative_genes2, colnames(counts_vst) %in% desired_columns2]
 desired_columns3 <- rownames(neoplasmavsnormal)  # Esto toma los nombres de las columnas 
 counts_vst_representative3 <- counts_vst[rownames(counts_vst) %in% representative_genes3, colnames(counts_vst) %in% desired_columns3]
-
+```
 
 as.matrix()
 slice(1:1000) %>%
@@ -448,7 +451,8 @@ p_8 <- pheatmap(counts_vst_representative3,
                 show_rownames = TRUE)
 ggsave(filename = "QCplots/neoplasmavsnormalheat.jpg", plot = p_8, width = 10, height = 10)
 
-#KEGG pathways
+KEGG pathways
+```
 BiocManager::install(c("pathview", "gage", "gageData"))
 library("AnnotationDbi")
 library("org.Hs.eg.db")
@@ -518,9 +522,9 @@ plot_pathway = function(pid) pathview(gene.data=foldchanges, pathway.id=pid, spe
 
 # Funcion para graficar multiples graficas que esten en el vector keggresids
 tmp = sapply(keggresids, function(pid) pathview(gene.data=foldchanges, pathway.id=pid, species="hsa"))
-
-##
-####ENRICHMENT
+```
+ENRICHMENT
+```
 BiocManager::install("clusterProfiler")
 library(clusterProfiler)
 # Filtrar los genes significativos (ya hecho)
@@ -553,8 +557,7 @@ barplot(rev(-log10(GO_enrich@result$p.adjust[1:10])),     # -log10 de los p-valu
         cex.names = 0.7,                                  # Tamaño de las etiquetas
         col="#dbc557")                                 # Color de las barras
 dev.off()
-
-
+```
 
 # Ajustar márgenes y aumentar el tamaño de la imagen
 jpeg(filename = "QCplots/barplotgo.jpg", width = 20, height = 8, units = "in", res = 300)
