@@ -90,7 +90,7 @@ Se toma como linea base las muestras de normal tissue
 ddsTxi$growth <- relevel(ddsTxi$growth, ref = "normal tissue")
 ```
 Resumen de las estadisticas descriptivas de la base de datos cuantificados
-``
+```
 summary(counts(ddsTxi))
 ```
 Se aplica el analisis de expresion diferencial
