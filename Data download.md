@@ -40,6 +40,10 @@ done
 cd ..
 
 ```
+Una vez creado el archivo se lo configura como ejecutable y ejecuta en el directorio de trabajo
+```
+chmod +x download.sh
+./download.sh
 
 ```
-```
+
