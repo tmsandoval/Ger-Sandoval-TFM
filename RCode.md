@@ -149,10 +149,10 @@ ggplot(samples, aes(x = sampletype, fill = growth)) +
        x = "Sitio de Muestreo") +
   theme_minimal()
 ```
-```
+
 Normalizacion de datos
-ddstxi2 <- estimateSizeFactors(ddstxi2)
 ```
+ddstxi2 <- estimateSizeFactors(ddstxi2)
 #Normalizacion mediante logaritmo regularizado
 dds_rlog <- rlog(ddstxi2)
 #Normalizacion mediante transformacion estabilizadora de varianza 
@@ -164,14 +164,12 @@ saveRDS(ddstxi2, "ddstxi2.rds", compress = T)
 saveRDS(dds_rlog, "dds_rlog.rds", compress = T)
 saveRDS(dds_vst, "dds_vst.rds", compress=T)
 saveRDS(samples, "samples.rds", compress=T)
-#Creacion de carpeta para guardar los graficos a generar
+```
+Creacion de carpeta para guardar los graficos a generar
+```
 if (!file.exists("QCplots")){
 dir.create("QCplots")
 }
-
-
-
-
 
 #PCA pLots
 # make my customized function to plot PCA
@@ -199,12 +197,9 @@ for (i in c(1:4)) {
       theme_bw()
     ggsave(filename = paste0("QCplots/PCAplot.","PC",i,"vs","PC",j,".pdf"), plot = p, width=6, height=5)
   }}
-
-
-
-
-
-#Boxplot
+```
+Boxplot
+```
 #Prepara los datos normalizados 
 counts_vst <- ddstxi2@assays@data$vst
 dat <- counts_vst %>%
@@ -248,7 +243,9 @@ latevsnormal <- mydata_col %>% filter(Condición %in% c("normal tissue", "late o
 earlyvsnormal <- mydata_col %>% filter(Condición %in% c("normal tissue", "early organoid culture"))
 neoplasmavsnormal <- mydata_col %>% filter(Condición %in% c("normal tissue", "neoplasm"))
 latevsnormal <- data.frame(latevsnormal)
-#Se genera el grafico pheatmap
+```
+Se genera el grafico pheatmap
+```
 p_3 <- pheatmap(
 sampleDistMatrix,
 clustering_distance_rows=sampleDists,
@@ -260,6 +257,7 @@ main="Distancia Euclidiana entre muestras"
 p_3
 #Se guarda el grafico en la carpeta creada anteriormente 
 ggsave(filename = "QCplots/sample_heatmap.jpg", plot = p_3, width = 10, height = 8)
+```
 #Se crea una copia de los datos 
 ddstxi3 <- ddstxi2
 resultsNames(ddstxi3)
