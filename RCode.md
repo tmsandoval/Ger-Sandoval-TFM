@@ -16,6 +16,7 @@ install.packages("BiocManager")
 BiocManager::install("DESeq2,DEGreport,tximport")
 ```
 Librerias a utilizar en el procesamiento 
+```
 library(DESeq2)
 library(tidyverse)
 library(RColorBrewer)
@@ -27,22 +28,30 @@ library(ggrepel)
 library(stringr)
 library(tibble)
 library(apeglm)
-#Extrae la informacion de las cuantificaciones de cada una de las muestras 
-files <- file.path(samples, "quant.sf")
-files
-#Se reemplaza en los nombres de las muestras quitando la terminacion quants
+```
+Extrae la informacion de las cuantificaciones de cada una de las muestras 
+```files <- file.path(samples, "quant.sf")
+```files
+Se reemplaza en los nombres de las muestras quitando la terminacion quants
+```
 names(files) <- str_replace(samples, "./quants/", "") 
 names(files) <- str_replace(names(files), "_quant", "") 
 files
-#Se lee el archivo indice de los genes de homo sapiens 
+``
+Se lee el archivo indice de los genes de homo sapiens 
+```
 tx2gene <- read.delim("tx2gene_grch38_ens94.txt")
-#Se observa la informacion de los genes presentes  
+```
+Se observa la informacion de los genes presentes  
+```
 tx2gene %>% View()
-?tximport   # Informacion de los comando utilizables en la funcion tximport
-#Se aplica tximport para concatenar nuestros datos de las muestras con los genes de homo sapiens
+```
+Se aplica tximport para concatenar nuestros datos de las muestras con los genes de homo sapiens
+```
 txi <- tximport(files, type="salmon", tx2gene=tx2gene[,c("tx_id", "ensgene")], countsFromAbundance="lengthScaledTPM", ignoreTxVersion=TRUE)
 file.exists(files)
 attributes(txi) #Se muestran los atributos del conjunto creado mediante tximport
+```
 # Verificar si hay valores NA
 anyNA(txi$counts)
 # Verificar si hay valores NaN
