@@ -15,7 +15,7 @@ Se crea un archivo ejecutable con el nombre "download"
 ```
 nano download.sh
 ```
-  El codigo de este archivo ejecutable se detalla:
+  El codigo de este archivo ejecutable se detalla, con el mismo se descarga de manera automatica y se descomprimen los archivos de las lecturas
 ```
 #!/bin/bash
 # Crear el directorio de datos y navegar a él
