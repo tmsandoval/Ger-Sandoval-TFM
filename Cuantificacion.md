@@ -54,6 +54,9 @@ for i in "${seq[@]}";
 done
 
 ```
+El argumento “–i” indica a Salmon dónde encontrar el índice, “-l A” indica determinar automáticamente el tipo de biblioteca de las lecturas de secuenciación. Además, “-p 8” indica que se realice 8 subprocesos y el argumento “–o” especifica el directorio output 
+
+
 Una vez creado el archivo se lo configura como ejecutable y ejecuta en el directorio de trabajo
 
 ```
